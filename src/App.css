@@ -1,0 +1,22 @@
+/* .App {
+  text-align: center;
+} */
+
+
+.container-fluid li a:hover{
+
+  color: white;
+  font-weight: 460;
+  
+  transition: 0.3s ease;
+ 
+}
+.container-fluid li a:focus{
+  color: white;
+  border-bottom:4px solid #fff;
+  transition: 0.3s ease;
+ 
+}
+
+
+

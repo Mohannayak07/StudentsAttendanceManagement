@@ -253,7 +253,7 @@ function DisplayStudentsDetails() {
                             <tr>
 
                                 <th scope="col">RollNumber</th>
-                                <th scope="col">Name</th>
+                                {/* <th scope="col">Name</th> */}
                                 <th scope="col">I</th>
                                 <th scope="col">II</th>
                                 <th scope="col">III</th>
@@ -277,7 +277,7 @@ function DisplayStudentsDetails() {
                                 return (index !== 0 && <tr key={index}>
 
                                     <td>{data.RollNumber}</td>
-                                    <td>{data.Name}</td>
+                                    {/* <td>{data.Name}</td> */}
                                     <td>{data.I === 'Present' ? <button className='btn btn-success' >Present</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 1)} />}</td>
                                     <td>{data.II === 'Present' ? <button className='btn btn-success' >Present</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 2)} />}</td>
                                     <td>{data.III === 'Present' ? <button className='btn btn-success'>Present</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 3)} />}</td>

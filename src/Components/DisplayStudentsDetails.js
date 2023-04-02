@@ -4,15 +4,16 @@ import { useLocation } from 'react-router-dom'
 import { tablestyles } from '../Styles'
 import html2pdf from 'html2pdf.js';
 import { download_csv, export_table_to_csv } from './Html2CSV';
+import {useNavigate} from 'react-router-dom'
 import '../App.css';
-function DisplayStudentsDetails() {
+function DisplayStudentsDetails({academicyear,setAcademicyear,branch}) {
     const { pathname } = useLocation()
     const [section, setSection] = useState();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false)
     const [studentdata, setStudentdata] = useState()
     const contentRef = useRef(null);
-
+    const navigate=useNavigate()
     const Changesection = () => {
         if (pathname === '/cse-a') {
             setSection("CSE-A")
@@ -33,9 +34,13 @@ function DisplayStudentsDetails() {
     const [sectiondata, setSectiondata] = useState([])
     useEffect(() => {
         Changesection();
+        var url=''
         if (pathname === '/cse-a') {
             setLoading(true);
-            axios.get(process.env.REACT_APP_CSEA).then(res => {
+            if(academicyear==='2019-2023'){
+                url=process.env.REACT_APP_CSEA
+            }
+            axios.get(url).then(res => {
                 // console.log(res.data.data)
                 setLoading(false);
                 setSectiondata(res.data.data);
@@ -230,6 +235,17 @@ function DisplayStudentsDetails() {
         let currentDate = `${day}-${month}-${year}`;
         return currentDate
     }
+    const clearSelection=()=>{
+        setLoading(true)
+        localStorage.clear()
+       window.location.reload();
+        setInterval(()=>{
+            navigate('/')
+        },2000)
+       
+        
+    }
+
 
     return (
         <div >
@@ -297,8 +313,12 @@ function DisplayStudentsDetails() {
                 </div>}
 
             </div>
-            {!loading && <button onClick={downloadPdf} className="btn btn-primary" style={{ marginRight: '10px', float: 'left', marginLeft: '34px', marginTop: '40px' }}>Download PDF</button>}
-            {!loading && <button onClick={() => export_table_to_csv(document.querySelector("myTable"), section)} className="btn btn-primary" style={{ float: 'left', marginLeft: '10px', marginTop: '40px' }}>Export to csv</button>}
+            <div style={{marginBottom:'100px',marginLeft:'152px',backgroundColor:'rgba(213,211,211)'}}>
+                {!loading && <button onClick={downloadPdf} className="btn btn-primary" style={{ marginRight: '10px', float: 'left', marginLeft: '34px', marginTop: '40px' }}>Download PDF</button>}
+                {!loading && <button onClick={() => export_table_to_csv(document.querySelector("myTable"), section)} className="btn btn-primary" style={{ float: 'left', marginLeft: '10px', marginTop: '40px' }}>Export to csv</button>}
+                {!loading && <button onClick={() => clearSelection()} className="btn btn-danger" style={{ float: 'left', marginLeft: '10px', marginTop: '40px' }}>Clear</button>}
+            </div>
+            
         </div>
     )
 }

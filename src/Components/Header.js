@@ -30,7 +30,7 @@ function Header({academicyear,setAcademicyear,branch}) {
                         <span className="navbar-toggler-icon"></span>
                     </button> */}
                     <div className="collapse navbar-collapse" id="navbarNav" style={{ marginLeft: '8%' }}>
-                        <ul className="navbar-nav">
+                        {/* <ul className="navbar-nav">
                             <li className="nav-item active">
                                 <Link className="nav-link" to='/cse-a'>CSE-A</Link>
                             </li>
@@ -46,7 +46,7 @@ function Header({academicyear,setAcademicyear,branch}) {
                             <li className="nav-item">
                                 <Link className="nav-link" to="/cse-e">CSE-E</Link>
                             </li>
-                        </ul>
+                        </ul> */}
                     </div>
                 </div>
             </nav>

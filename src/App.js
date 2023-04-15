@@ -14,11 +14,11 @@ function App() {
       <Header academicyear={academicyear} setAcademicyear={setAcademicyear} setBranch={setBranch} branch={branch}/>
         <Routes>
           <Route exact path='/' element={<Home academicyear={academicyear} setAcademicyear={setAcademicyear} setBranch={setBranch}/>}></Route>
-          <Route exact path='/cse-a' element={<DisplayStudentsDetails academicyear={academicyear} setAcademicyear={setAcademicyear} branch={branch} setBranch={setBranch}/>}></Route>
-          <Route exact path='/cse-b' element={<DisplayStudentsDetails academicyear={academicyear} setAcademicyear={setAcademicyear} branch={branch} setBranch={setBranch}/>}></Route>
-          <Route exact path='/cse-c' element={<DisplayStudentsDetails academicyear={academicyear} setAcademicyear={setAcademicyear} branch={branch} setBranch={setBranch}/>}></Route>
-          <Route exact path='/cse-d' element={<DisplayStudentsDetails academicyear={academicyear} setAcademicyear={setAcademicyear} branch={branch} setBranch={setBranch}/>}></Route>
-          <Route exact path='/cse-e' element={<DisplayStudentsDetails academicyear={academicyear} setAcademicyear={setAcademicyear} branch={branch} setBranch={setBranch}/>}></Route>
+          <Route exact path='/:academicyear/:sec' element={<DisplayStudentsDetails academicyear={academicyear} setAcademicyear={setAcademicyear} branch={branch} setBranch={setBranch}/>}></Route>
+          {/* <Route exact path='/:sec' element={<DisplayStudentsDetails academicyear={academicyear} setAcademicyear={setAcademicyear} branch={branch} setBranch={setBranch}/>}></Route>
+          <Route exact path='/:sec' element={<DisplayStudentsDetails academicyear={academicyear} setAcademicyear={setAcademicyear} branch={branch} setBranch={setBranch}/>}></Route>
+          <Route exact path='/' element={<DisplayStudentsDetails academicyear={academicyear} setAcademicyear={setAcademicyear} branch={branch} setBranch={setBranch}/>}></Route>
+          <Route exact path='/cse-e' element={<DisplayStudentsDetails academicyear={academicyear} setAcademicyear={setAcademicyear} branch={branch} setBranch={setBranch}/>}></Route> */}
         </Routes>
       </Router>
     </div>

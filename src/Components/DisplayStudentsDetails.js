@@ -2,162 +2,283 @@ import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios'
 import { useLocation } from 'react-router-dom'
 import { tablestyles } from '../Styles'
+import { useParams } from 'react-router-dom'
 import html2pdf from 'html2pdf.js';
 import { download_csv, export_table_to_csv } from './Html2CSV';
 import {useNavigate} from 'react-router-dom'
 import '../App.css';
-function DisplayStudentsDetails({academicyear,setAcademicyear,branch}) {
+function DisplayStudentsDetails({branch}) {
     const { pathname } = useLocation()
-    const [section, setSection] = useState();
+    
+    const academicyear=useParams().academicyear
+    const section=useParams().sec
+    // console.log(params)
+    // console.log(pathname)
+   
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false)
     const [studentdata, setStudentdata] = useState()
     const contentRef = useRef(null);
     const navigate=useNavigate()
-    const Changesection = () => {
-        if (pathname === '/cse-a') {
-            setSection("CSE-A")
-        }
-        else if (pathname === '/cse-b') {
-            setSection("CSE-B")
-        }
-        else if (pathname === '/cse-c') {
-            setSection("CSE-C")
-        }
-        else if (pathname === '/cse-d') {
-            setSection("CSE-D")
-        }
-        else if (pathname === '/cse-e') {
-            setSection("CSE-E")
-        }
-    }
+    // const Changesection = () => {
+    //     if (pathname === '/cse-a') {
+    //         setSection("CSE-A")
+    //     }
+    //     else if (pathname === '/cse-b') {
+    //         setSection("CSE-B")
+    //     }
+    //     else if (pathname === '/cse-c') {
+    //         setSection("CSE-C")
+    //     }
+    //     else if (pathname === '/cse-d') {
+    //         setSection("CSE-D")
+    //     }
+    //     else if (pathname === '/cse-e') {
+    //         setSection("CSE-E")
+    //     }
+    // }
     const [sectiondata, setSectiondata] = useState([])
-    useEffect(() => {
-        Changesection();
-        var url=''
-        if (pathname === '/cse-a') {
-            setLoading(true);
+const getStudentsData=(sec,url,academicyear)=>{
+    axios.get(url).then(res => {
+        // console.log(res.data.data)
+        setLoading(false);
+        // setSectiondata(res.data.data);
+       
+        
+        
             if(academicyear==='2019-2023'){
-                url=process.env.REACT_APP_CSEA
+                const val = JSON.parse(localStorage.getItem(`19${section}`))
+                if(!val){
+
+                    localStorage.setItem(`19${sec}`, JSON.stringify(res.data.data));
+                    setSectiondata(res.data.data);
+                }
+                else{
+                    setSectiondata(val)
+                }
             }
-            axios.get(url).then(res => {
-                // console.log(res.data.data)
-                setLoading(false);
-                setSectiondata(res.data.data);
-                const val = JSON.parse(localStorage.getItem('cse-a'))
-                if (!val) {
-                    localStorage.setItem('cse-a', JSON.stringify(res.data.data));
+            else if(academicyear==='2020-2024'){
+                const val = JSON.parse(localStorage.getItem(`20${section}`))
+                if(!val){
+
+                    localStorage.setItem(`20${sec}`, JSON.stringify(res.data.data));
                     setSectiondata(res.data.data);
                 }
-                else {
-                    setSectiondata(val);
+                else{
+                    setSectiondata(val)
                 }
+            }
+            else if(academicyear==='2021-2025'){
+                const val = JSON.parse(localStorage.getItem(`21${section}`))
+                if(!val){
+
+                    localStorage.setItem(`21${sec}`, JSON.stringify(res.data.data));
+                    setSectiondata(res.data.data);
+                }
+                else{
+                    setSectiondata(val)
+                }
+            }
+        
+      
 
 
-            })
-                .catch(err => {
-                    console.log(err)
-                    setError(true)
-                    setInterval(() => {
-                        setError(false)
-                    }, 2000)
-                })
-        }
-        else if (pathname === '/cse-b') {
+    })
+        .catch(err => {
+            console.log(err)
+            setLoading(false);
+            setError(true)
+            setInterval(() => {
+                setError(false)
+            }, 2000)
+        })
+}
+
+    useEffect(() => {
+       
+        var url=''
+        if (academicyear === '2019-2023') {
             setLoading(true);
-            axios.get(process.env.REACT_APP_CSEB).then(res => {
-                console.log(res.data.data)
-                setLoading(false);
-                setSectiondata(res.data.data);
-                const val = JSON.parse(localStorage.getItem('cse-b'))
-                if (!val) {
-                    localStorage.setItem('cse-b', JSON.stringify(res.data.data));
-                    setSectiondata(res.data.data);
+            if(branch==='CSE'){
+
+                if(section==='CSE-A'){
+                    url=process.env.REACT_APP_CSEA
+                    getStudentsData(section,url,academicyear)
                 }
-                else {
-                    setSectiondata(val);
+                else if(section==='CSE-B'){
+                    url=process.env.REACT_APP_CSEB
+                    getStudentsData(section,url,academicyear)
+    
                 }
-            })
-                .catch(err => {
-                    console.log(err)
-                    setError(true)
-                    setInterval(() => {
-                        setError(false)
-                    }, 2000)
-                })
+                else if(section==='CSE-C'){
+                    url=process.env.REACT_APP_CSEC
+                    getStudentsData(section,url,academicyear)
+    
+                }
+                else if(section==='CSE-D'){
+                    url=process.env.REACT_APP_CSED
+                    getStudentsData(section,url,academicyear)
+    
+                }
+                else if(section==='CSE-E'){
+                    url=process.env.REACT_APP_CSEE
+                    getStudentsData(section,url,academicyear)
+    
+                }
+            }
+            else if(branch==='ECE'){
+
+                 if(section==='ECE-A'){
+                    url=process.env.REACT_APP_ECEA
+                    getStudentsData(section,url,academicyear)
+    
+                }
+                else if(section==='ECE-B'){
+                    url=process.env.REACT_APP_ECEB
+                    getStudentsData(section,url,academicyear)
+    
+                }
+                else if(section==='ECE-C'){
+                    url=process.env.REACT_APP_ECEC
+                    getStudentsData(section,url,academicyear)
+    
+                }
+            }
+            else if(branch==='MECH'){
+
+                if(section==='MECH-A'){
+                    url=process.env.REACT_APP_MECHA
+                    getStudentsData(section,url,academicyear)
+    
+                }
+                else if(section==='MECH-B'){
+                    url=process.env.REACT_APP_MECHB
+                    getStudentsData(section,url,academicyear)
+    
+                }
+            }
+            
         }
-        else if (pathname === '/cse-c') {
+        else if(academicyear==='2020-2024'){
             setLoading(true);
-            axios.get(process.env.REACT_APP_CSEC).then(res => {
-                console.log(res.data.data)
-                setLoading(false);
-                setSectiondata(res.data.data);
-                const val = JSON.parse(localStorage.getItem('cse-c'))
-                if (!val) {
-                    localStorage.setItem('cse-c', JSON.stringify(res.data.data));
-                    setSectiondata(res.data.data);
-                }
-                else {
-                    setSectiondata(val);
-                }
+            if(branch==='CSE'){
 
-            })
-                .catch(err => {
-                    console.log(err)
-                    setError(true)
-                    setInterval(() => {
-                        setError(false)
-                    }, 2000)
-                })
+                if(section==='CSE-A'){
+                    url=process.env.REACT_APP_20CSEA
+                    getStudentsData(section,url,academicyear)
+                }
+                else if(section==='CSE-B'){
+                    url=process.env.REACT_APP_20CSEB
+                    getStudentsData(section,url,academicyear)
+                }
+                else if(section==='CSE-C'){
+                    url=process.env.REACT_APP_20CSEC
+                    getStudentsData(section,url,academicyear)
+                }
+                else if(section==='CSE-D'){
+                    url=process.env.REACT_APP_20CSED
+                    getStudentsData(section,url,academicyear)
+                }
+                else if(section==='CSE-E'){
+                    url=process.env.REACT_APP_20CSEE
+                    getStudentsData(section,url,academicyear)
+                }
+            }
+            
+            else if(branch==='ECE'){
+
+                if(section==='ECE-A'){
+                   url=process.env.REACT_APP_20ECEA
+                   getStudentsData(section,url,academicyear)
+   
+               }
+               else if(section==='ECE-B'){
+                   url=process.env.REACT_APP_20ECEB
+                   getStudentsData(section,url,academicyear)
+   
+               }
+               else if(section==='ECE-C'){
+                   url=process.env.REACT_APP_20ECEC
+                   getStudentsData(section,url,academicyear)
+   
+               }
+           }
+           else if(branch==='MECH'){
+
+            if(section==='MECH-A'){
+                url=process.env.REACT_APP_20MECHA
+                getStudentsData(section,url,academicyear)
+
+            }
+            else if(section==='MECH-B'){
+                url=process.env.REACT_APP_20MECHB
+                getStudentsData(section,url,academicyear)
+
+            }
         }
-        else if (pathname === '/cse-d') {
+            
+        }
+
+        else if(academicyear==='2021-2025'){
             setLoading(true);
-            axios.get(process.env.REACT_APP_CSED).then(res => {
-                console.log(res.data.data)
-                setLoading(false);
-                setSectiondata(res.data.data);
-                const val = JSON.parse(localStorage.getItem('cse-d'))
-                if (!val) {
-                    localStorage.setItem('cse-d', JSON.stringify(res.data.data));
-                    setSectiondata(res.data.data);
-                }
-                else {
-                    setSectiondata(val);
-                }
+            if(branch==='CSE'){
 
-            })
-                .catch(err => {
-                    console.log(err)
-                    setError(true)
-                    setInterval(() => {
-                        setError(false)
-                    }, 2000)
-                })
+                if(section==='CSE-A'){
+                    url=process.env.REACT_APP_21CSEA
+                    getStudentsData(section,url,academicyear)
+                }
+                else if(section==='CSE-B'){
+                    url=process.env.REACT_APP_21CSEB
+                    getStudentsData(section,url,academicyear)
+                }
+                else if(section==='CSE-C'){
+                    url=process.env.REACT_APP_21CSEC
+                    getStudentsData(section,url,academicyear)
+                }
+                else if(section==='CSE-D'){
+                    url=process.env.REACT_APP_21CSED
+                    getStudentsData(section,url,academicyear)
+                }
+                else if(section==='CSE-E'){
+                    url=process.env.REACT_APP_21CSEE
+                    getStudentsData(section,url,academicyear)
+                }
+            }
+            
+            else if(branch==='ECE'){
+
+                if(section==='ECE-A'){
+                   url=process.env.REACT_APP_21ECEA
+                   getStudentsData(section,url,academicyear)
+   
+               }
+               else if(section==='ECE-B'){
+                   url=process.env.REACT_APP_21ECEB
+                   getStudentsData(section,url,academicyear)
+   
+               }
+               else if(section==='ECE-C'){
+                   url=process.env.REACT_APP_21ECEC
+                   getStudentsData(section,url,academicyear)
+   
+               }
+           }
+           else if(branch==='MECH'){
+
+            if(section==='MECH-A'){
+                url=process.env.REACT_APP_21MECHA
+                getStudentsData(section,url,academicyear)
+
+            }
+            else if(section==='MECH-B'){
+                url=process.env.REACT_APP_21MECHB
+                getStudentsData(section,url,academicyear)
+
+            }
         }
-        else if (pathname === '/cse-e') {
-            setLoading(true);
-            axios.get(process.env.REACT_APP_CSEE).then(res => {
-                console.log(res.data.data)
-                setLoading(false);
-
-                const val = JSON.parse(localStorage.getItem('cse-e'))
-                if (!val) {
-                    localStorage.setItem('cse-e', JSON.stringify(res.data.data));
-                    setSectiondata(res.data.data);
-                }
-                else {
-                    setSectiondata(val);
-                }
-            })
-                .catch(err => {
-                    console.log(err)
-                    setError(true)
-                    setInterval(() => {
-                        setError(false)
-                    }, 2000)
-                })
+            
         }
-
+        
     }, [pathname])
 
     const handlebutton = (rollno, hour) => {
@@ -186,35 +307,29 @@ function DisplayStudentsDetails({academicyear,setAcademicyear,branch}) {
             }
 
         })
-        if (pathname === '/cse-a') {
-            localStorage.setItem('cse-a', JSON.stringify(sectiondata));
-            const value = JSON.parse(localStorage.getItem('cse-a'))
+        if(academicyear==='2019-2023'){
+                localStorage.setItem(`19${section}`, JSON.stringify(sectiondata));
+                const value = JSON.parse(localStorage.getItem(`19${section}`))
+                // console.log(value);
+                setSectiondata(value);
+            
+           
+        }
+        else if(academicyear==='2020-2024'){
+            localStorage.setItem(`20${section}`, JSON.stringify(sectiondata));
+            const value = JSON.parse(localStorage.getItem(`20${section}`))
             // console.log(value);
             setSectiondata(value);
+        
+       
         }
-        else if (pathname === '/cse-b') {
-            localStorage.setItem('cse-b', JSON.stringify(sectiondata));
-            const value = JSON.parse(localStorage.getItem('cse-b'))
-            console.log(value);
+        else if(academicyear==='2021-2025'){
+            localStorage.setItem(`21${section}`, JSON.stringify(sectiondata));
+            const value = JSON.parse(localStorage.getItem(`21${section}`))
+            // console.log(value);
             setSectiondata(value);
-        }
-        else if (pathname === '/cse-c') {
-            localStorage.setItem('cse-c', JSON.stringify(sectiondata));
-            const value = JSON.parse(localStorage.getItem('cse-c'))
-            console.log(value);
-            setSectiondata(value);
-        }
-        else if (pathname === '/cse-d') {
-            localStorage.setItem('cse-d', JSON.stringify(sectiondata));
-            const value = JSON.parse(localStorage.getItem('cse-d'))
-            console.log(value);
-            setSectiondata(value);
-        }
-        else if (pathname === '/cse-e') {
-            localStorage.setItem('cse-e', JSON.stringify(sectiondata));
-            const value = JSON.parse(localStorage.getItem('cse-e'))
-            console.log(value);
-            setSectiondata(value);
+        
+       
         }
     }
 
@@ -253,7 +368,10 @@ function DisplayStudentsDetails({academicyear,setAcademicyear,branch}) {
 
             <div ref={contentRef}>
 
-                {section && <h2 style={{ marginTop: '12px', marginBottom: '20px',textAlign:'center' }}>{section} Students Details({getDate()})</h2>}
+                {section && <><h2 style={{ marginTop: '12px', marginBottom: '20px',textAlign:'center' }}>{section} Students Details</h2>
+                    <p style={{textAlign:'center'}}>Academic Year : {academicyear}</p>
+                    <p style={{textAlign:'center'}}>Date : {getDate()}</p>
+                </>}
                 {error && <div className="alert alert-danger" role="alert" style={{ marginTop: '10px', marginBottom: '10px', width: '50%', margin: '0 auto' }}>
                     Error while fetching Data...
                 </div>}
@@ -294,13 +412,13 @@ function DisplayStudentsDetails({academicyear,setAcademicyear,branch}) {
 
                                     <td>{data.RollNumber}</td>
                                     {/* <td>{data.Name}</td> */}
-                                    <td>{data.I === 'Present' ? <button className='btn btn-success' >Present</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 1)} />}</td>
-                                    <td>{data.II === 'Present' ? <button className='btn btn-success' >Present</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 2)} />}</td>
-                                    <td>{data.III === 'Present' ? <button className='btn btn-success'>Present</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 3)} />}</td>
-                                    <td>{data.IV === 'Present' ? <button className='btn btn-success'>Present</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 4)} />}</td>
-                                    <td>{data.V === 'Present' ? <button className='btn btn-success' >Present</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 5)} />}</td>
-                                    <td>{data.VI === 'Present' ? <button className='btn btn-success'>Present</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 6)} />}</td>
-                                    <td>{total}</td>
+                                    <td>{data.I === 'Present' ? <button className='btn btn-success' >P</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 1)} />}</td>
+                                    <td>{data.II === 'Present' ? <button className='btn btn-success' >P</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 2)} />}</td>
+                                    <td>{data.III === 'Present' ? <button className='btn btn-success'>P</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 3)} />}</td>
+                                    <td>{data.IV === 'Present' ? <button className='btn btn-success'>P</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 4)} />}</td>
+                                    <td>{data.V === 'Present' ? <button className='btn btn-success' >P</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 5)} />}</td>
+                                    <td>{data.VI === 'Present' ? <button className='btn btn-success'>P</button> : <input type={'checkbox'} onChange={() => handlebutton(data.RollNumber, 6)} />}</td>
+                                    <td>{total}/6</td>
 
                                 </tr>
 
